@@ -50,7 +50,12 @@ class BaseModel():
     def load_network(self, network, network_label, epoch_label):
         save_filename = '%s_net_%s.pth' % (epoch_label, network_label)
         save_path = os.path.join(self.save_dir, save_filename)
+        print(f'Loading network from: {save_path}')
+        if not os.path.exists(save_path):
+            print(f'WARNING: Checkpoint file not found at {save_path}!')
+            return
         network.load_state_dict(torch.load(save_path))
+        print(f'Successfully loaded checkpoint from {save_path}')
 
     # update learning rate (called once every epoch)
     def update_learning_rate(self):

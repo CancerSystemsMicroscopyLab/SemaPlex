@@ -56,17 +56,33 @@ class image2imagedataset(data.Dataset):
             x_ch = cv2.imread(os.path.join(self.dataroot, ch_name, image_name), cv2.IMREAD_GRAYSCALE)
             in_chs.append(x_ch)
 
-        if not self.isTrain:
-            out_chs = []
-            for ch_name in self.targets:
-                y_ch = cv2.imread(os.path.join(self.dataroot, ch_name, image_name), cv2.IMREAD_GRAYSCALE)
+        # Load targets for both train and test. In test, allow missing targets (zeros fallback) for inference-only use.
+        out_chs = []
+        for ch_name in self.targets:
+            target_path = os.path.join(self.dataroot, ch_name, image_name)
+            if os.path.exists(target_path):
+                y_ch = cv2.imread(target_path, cv2.IMREAD_GRAYSCALE)
                 out_chs.append(y_ch)
+            else:
+                # If target doesn't exist (test-time inference), use zeros of expected size
+                # Determine size from an input channel if available, else default 256x256
+                if len(in_chs) > 0 and in_chs[0] is not None:
+                    h, w = in_chs[0].shape[:2]
+                else:
+                    h, w = 256, 256
+                out_chs.append(np.zeros((h, w), dtype=np.uint8))
 
-            y = np.stack(out_chs, axis=2)
-        else:
-            y = np.zeros((256,256,1))
+        y = np.stack(out_chs, axis=2)
 
-        x = np.stack(in_chs, axis=2)
+        # Replace any None inputs with zeros before stacking
+        sanitized_in_chs = []
+        for ch in in_chs:
+            if ch is None:
+                sanitized_in_chs.append(np.zeros((y.shape[0], y.shape[1]), dtype=np.uint8))
+            else:
+                sanitized_in_chs.append(ch)
+
+        x = np.stack(sanitized_in_chs, axis=2)
         x, y = self.transform(x, y)
 
         x = torch.unsqueeze(x, dim=0)

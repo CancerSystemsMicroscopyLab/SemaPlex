@@ -22,6 +22,8 @@ def train(opt, dataset):
     for epoch in range(opt.epoch_count, opt.niter + opt.niter_decay + 1):
         epoch_start_time = time.time()
         epoch_iter = 0
+        running_l1 = 0.0
+        batches = 0
         
         #Training step
         opt.phase='train'
@@ -30,11 +32,21 @@ def train(opt, dataset):
             epoch_iter += opt.batchSize
             model.set_input(data)
             model.optimize_parameters()
+            # Basic loss logging (L1) if available
+            if hasattr(model, 'loss_G_L1') and model.loss_G_L1 is not None:
+                try:
+                    l1_val = float(model.loss_G_L1.item())
+                except Exception:
+                    l1_val = 0.0
+                running_l1 += l1_val
+                batches += 1
 
         print('saving the latest model (epoch %d, total_steps %d)' % (epoch, total_steps))
         model.save('latest')
 
 
-        print('End of epoch %d / %d \t Time Taken: %d sec' %
-              (epoch, opt.niter + opt.niter_decay, time.time() - epoch_start_time))
+        avg_l1 = (running_l1 / max(1, batches)) if batches > 0 else 0.0
+        epoch_time = time.time() - epoch_start_time
+        print('End of epoch %d / %d \t Time Taken: %.3f sec \t avg L1: %.6f' %
+              (epoch, opt.niter + opt.niter_decay, epoch_time, avg_l1))
         model.update_learning_rate()

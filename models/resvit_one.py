@@ -5,7 +5,6 @@ import util.util as util
 from util.image_pool import ImagePool
 from .base_model import BaseModel
 from . import networks
-from torchvision import models
 
 class ResViT_model(BaseModel):
     def name(self):
@@ -72,6 +71,9 @@ class ResViT_model(BaseModel):
             self.real_A = Variable(self.input_A)
             self.fake_B = self.netG(self.real_A)
             self.real_B = Variable(self.input_B)
+            
+            # Debug: print raw tensor stats
+            print(f'    Raw fake_B tensor: shape={self.fake_B.shape}, min={self.fake_B.min():.3f}, max={self.fake_B.max():.3f}, mean={self.fake_B.mean():.3f}')
 
     # get image paths
     def get_image_paths(self):
@@ -100,6 +102,10 @@ class ResViT_model(BaseModel):
         real_A = util.tensor2im(self.real_A.data)
         fake_B = util.tensor2im(self.fake_B.data)
         real_B = util.tensor2im(self.real_B.data)
+        
+        # Debug: check the shapes
+        print(f'    After tensor2im - real_A: {real_A.shape}, fake_B: {fake_B.shape}, real_B: {real_B.shape}')
+        
         return OrderedDict([('real_A', real_A), ('fake_B', fake_B), ('real_B', real_B)])
 
     def save(self, label):
