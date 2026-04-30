@@ -54,11 +54,17 @@ Parent
 
 ## Training and applying the model
 
-Train and apply the SemaPlex model, set the dataset path and input/target channels in the main.py file. Guiding channels may be specified as an addition input channe as we have done here for DAPI.
-Running this python script will then train a model using all data which have matching input-target pairs. Inputs field without corresponding target fields will not be used for training but predicted using the trained model. 
-All results are placed in the results folder. A sample result has been provided showing prediction of lamin from a mixture in 555nm further guided by DAPI.  
+Training the SemaPlex model:
+1. Set the dataset path and input/target channels in the main.py file. Guiding channels may be specified as an addition input channel. Also specify the target markers to be unmixed. For example, in this repo, parameters are set so that lamin will be unmixed from a mixture here named 555nm and augmented/guided by DAPI channel.
+
+2. Run the main.py scripte which will then train a model using all data which have matching input-target pairs (by image file name). Inputs field without corresponding target fields will not be used for training but predicted using the trained model subsequently. All results are placed in the results folder.
+
+3. To use further apply the model to unmix, change the path_to_dataset variable to point to the new dataset. To prevent retraining of a model, remove/comment out the call to 'train_unet' on line 36. The script will then unmix all images in the new dataset.
+
+A sample result has been provided showing prediction of lamin from a mixture in 555nm further guided by DAPI which can be reproduced by running the sample main.py script as is.  
 Run time can vary depending on hardware and dataset size. ~1hrs-4hrs runtime might be expected. 
 
+For 
 
 ## Downstream processing
 Downstream results demonstrated in the manuscript - TBC- were created using scripts hosted at - TBC - 
