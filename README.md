@@ -62,8 +62,7 @@ Parent
 
 A sample result has been provided showing prediction of lamin from a mixture in 555nm further guided by DAPI which can be reproduced by running the sample main.py script as is.  
 Run time can vary depending on hardware and dataset size. ~1hrs-4hrs runtime might be expected. 
-
-For 
+ 
 
 ## Downstream processing
 Downstream results demonstrated in the manuscript - TBC- were created using scripts hosted at - TBC - 
