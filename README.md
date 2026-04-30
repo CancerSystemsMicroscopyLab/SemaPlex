@@ -54,7 +54,6 @@ Parent
 
 ## Training and applying the model
 
-Training the SemaPlex model:
 1. Set the dataset path and input/target channels in the main.py file. Guiding channels may be specified as an addition input channel. Also specify the target markers to be unmixed. For example, in this repo, parameters are set so that lamin will be unmixed from a mixture here named 555nm and augmented/guided by DAPI channel.
 
 2. Run the main.py scripte which will then train a model using all data which have matching input-target pairs (by image file name). Inputs field without corresponding target fields will not be used for training but predicted using the trained model subsequently. All results are placed in the results folder.
