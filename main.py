@@ -12,7 +12,6 @@ if __name__ == '__main__':
 
     ###### to set
     path_to_dataset = './sample_dataset'
-    path_to_dataset = r'D:\Team Members\Andrew Gunawan\MD_unmixing\code_for_submission\ResViT\sample_dataset'
     inputs = ['mix555', 'DAPI']
     targets = ['lamin']
     ##########
@@ -21,8 +20,7 @@ if __name__ == '__main__':
     experiment_name = '_'.join(inputs)
 
     dataroot = path_to_dataset
-    # checkpoints = './results/'
-    checkpoints = r'D:\Team Members\Andrew Gunawan\MD_unmixing\code_for_submission\ResViT\results'
+    checkpoints = './results/'
     target_images = np.array(os.listdir(os.path.join(dataroot, targets[0])))
     input_images = np.array(os.listdir(os.path.join(dataroot, inputs[0])))
 
